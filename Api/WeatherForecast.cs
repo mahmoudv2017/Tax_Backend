@@ -1,4 +1,4 @@
-namespace TaxBackend
+namespace Api
 {
     public class WeatherForecast
     {
