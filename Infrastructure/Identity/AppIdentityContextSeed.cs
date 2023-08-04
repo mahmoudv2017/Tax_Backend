@@ -21,6 +21,13 @@ namespace Infrastructure.Identity
             }
             if(!usermanager.Users.Any())
             {
+                var address = new Address
+                {
+                    City = "portSaid",
+                    Country = "Egypt",
+                    PostalCode = 45678,
+                    State = "Shareq"
+                };
                 var newUser = new User
                 {
                     DisplayName = "Mahmoud Hehsam",
@@ -28,7 +35,8 @@ namespace Infrastructure.Identity
                     Role = "Admin",
                     PhoneNumber= "01202645204",
                     Email = "mahmoudv2012@gmail.com",
-                    SSN = "2971110600232"
+                    SSN = "2971110600232",
+                    Address= address,
                 };
 
 
@@ -48,7 +56,9 @@ namespace Infrastructure.Identity
                     Role = "TaxPayer",
                     PhoneNumber = "01202645204",
                     Email = "omarv2012@gmail.com",
-                    SSN = "2971110600234"
+                    SSN = "2971110600234",
+                    Address = address,
+
                 };
 
 
