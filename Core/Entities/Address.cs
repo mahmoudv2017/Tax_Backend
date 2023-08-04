@@ -3,8 +3,8 @@
     public class Address
     {
         public int Id { get; set; }
-        public virtual User user { get; set; }
         public string UserID { get; set; }
+        public virtual User user { get; set; }
 
         public string City { get; set; }
         public string State { get; set; }

@@ -29,6 +29,7 @@ builder.Services.AddDbContext<AppIdentityContext>(opt =>
 IdentityBuilder identityBuilder = builder.Services.AddIdentityCore<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
+   
 });
 
 identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(IdentityRole), identityBuilder.Services);

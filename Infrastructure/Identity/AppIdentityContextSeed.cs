@@ -40,31 +40,30 @@ namespace Infrastructure.Identity
                 };
 
                 await IdentityContext.TaxPayers.AddAsync(newTaxPayer);
+
+                var newUser2 = new User
+                {
+                    DisplayName = "omar Hehsam",
+                    UserName = "omarv2012",
+                    Role = "TaxPayer",
+                    PhoneNumber = "01202645204",
+                    Email = "omarv2012@gmail.com",
+                    SSN = "2971110600234"
+                };
+
+
+                await usermanager.CreateAsync(newUser2, "Vcut2020@");
+                await usermanager.AddToRoleAsync(newUser2, newUser2.Role);
+                var newTaxPayer2 = new TaxPayer
+                {
+                    User = newUser2,
+                };
+
+                await IdentityContext.TaxPayers.AddAsync(newTaxPayer2);
                 await IdentityContext.SaveChangesAsync();
-
-
             }
+          
 
-            var newUser2 = new User
-            {
-                DisplayName = "omar Hehsam",
-                UserName = "omarv2012",
-                Role = "TaxPayer",
-                PhoneNumber = "01202645204",
-                Email = "omarv2012@gmail.com",
-                SSN = "2971110600234"
-            };
-
-
-            await usermanager.CreateAsync(newUser2, "Vcut2020@");
-            await usermanager.AddToRoleAsync(newUser2, newUser2.Role);
-            var newTaxPayer2 = new TaxPayer
-            {
-                User = newUser2,
-            };
-
-            await IdentityContext.TaxPayers.AddAsync(newTaxPayer2);
-            await IdentityContext.SaveChangesAsync();
 
         }
     }

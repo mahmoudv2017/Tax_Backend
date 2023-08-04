@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(AppIdentityContext))]
     partial class AppIdentityContextModelSnapshot : ModelSnapshot
@@ -118,8 +118,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("FilingDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ForMonth")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ForMonth")
+                        .HasColumnType("TEXT");
 
                     b.Property<double>("Income")
                         .HasColumnType("REAL");

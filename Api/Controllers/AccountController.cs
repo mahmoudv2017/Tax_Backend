@@ -16,14 +16,20 @@ namespace Api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IUnitOfWork<TaxPayer> _taxpayerrepo;
+        private readonly IUnitOfWork<Admin> _Adminrepo;
+
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ITokenProvider _tokenProvider;
-        public AccountController(  UserManager<User> userManager, SignInManager<User> signInManager , ITokenProvider tokenProvider )
+        public AccountController(IUnitOfWork<TaxPayer> taxpayerrepo , IUnitOfWork<Admin> Adminrepo , UserManager<User> userManager, SignInManager<User> signInManager , ITokenProvider tokenProvider )
         {
             _userManager = userManager;
+            _Adminrepo = Adminrepo;
             _signInManager = signInManager;
             _tokenProvider = tokenProvider;
+            _taxpayerrepo = taxpayerrepo;
+
         }
 
         [HttpPost("login")]
@@ -50,11 +56,13 @@ namespace Api.Controllers
             return await _userManager.FindByEmailAsync(email) != null;
         }
 
-        [HttpGet("emailSSN")]
+        [HttpGet("Checkssn")]
         public async Task<ActionResult<bool>> CheckSSN([FromQuery] string ssn)
         {
             return await _userManager.Users.FirstOrDefaultAsync(user => user.SSN == ssn) != null;
         }
+
+      
 
         [HttpGet("getuser")]
         [Authorize]
@@ -75,7 +83,7 @@ namespace Api.Controllers
         public async Task<ActionResult<UserDto>> Register(RegisterDto register)
         {
             var checkssn = await _userManager.Users.FirstOrDefaultAsync(user => user.SSN== register.SSN);
-            if (checkssn is not null) { return BadRequest(new ApiReponse(401)); }
+            if (checkssn is not null) { return BadRequest(new ApiReponse(401 , "This Social Security Number Already Exists")); }
             var newUser = new User {
                 Email = register.Email,
                 DisplayName = register.DisplayName,
@@ -100,20 +108,23 @@ namespace Api.Controllers
            await _userManager.AddToRoleAsync(newUser, register.Role);
             if (!CreatedUser.Succeeded) { return BadRequest(new ApiReponse(400)); }
 
-            if (register.Role == "User")
+            if (register.Role == "TaxPayer")
             {
                 var newTaxpayer = new TaxPayer
                 {
                     User = newUser,
                 };
+               await _taxpayerrepo.Add(newTaxpayer);
             }
             else
             {
-                var newTaxpayer = new Admin
+                var newAdmin = new Admin
                 {
                     User = newUser,
                 };
+                await _Adminrepo.Add(newAdmin);
             }
+            await _taxpayerrepo.SaveChangeAsync();
 
             return Ok(new UserDto
             {

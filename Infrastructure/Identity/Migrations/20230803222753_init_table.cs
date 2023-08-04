@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Identity.Migrations
 {
     /// <inheritdoc />
     public partial class init_table : Migration
@@ -233,7 +233,7 @@ namespace Infrastructure.Migrations
                     TaxableIncome = table.Column<double>(type: "REAL", nullable: false),
                     TotalTax = table.Column<double>(type: "REAL", nullable: false),
                     TaxWithheld = table.Column<double>(type: "REAL", nullable: false),
-                    ForMonth = table.Column<int>(type: "INTEGER", nullable: false)
+                    ForMonth = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

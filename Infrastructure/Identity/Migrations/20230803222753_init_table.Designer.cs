@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(AppIdentityContext))]
-    [Migration("20230803114541_init_table")]
+    [Migration("20230803222753_init_table")]
     partial class init_table
     {
         /// <inheritdoc />
@@ -121,8 +121,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("FilingDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ForMonth")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ForMonth")
+                        .HasColumnType("TEXT");
 
                     b.Property<double>("Income")
                         .HasColumnType("REAL");

@@ -1,4 +1,6 @@
-﻿namespace Api.Dtos
+﻿using Core.Entities;
+
+namespace Api.Dtos
 {
     public class UserInfoDto
     {
@@ -7,6 +9,7 @@
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
+        public AddressDto Address { get; set; }
         public List<TaxReturnDtoReponse> taxReturnDtoReponses { get; set; }
     }
 }

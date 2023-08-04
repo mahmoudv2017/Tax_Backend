@@ -9,6 +9,8 @@ namespace Infrastructure.Identity
     {
         public AppIdentityContext(DbContextOptions<AppIdentityContext> opt) : base(opt) { }
 
+        public DbSet<Address> Address { get; set; }
+
         public DbSet<TaxPayer> TaxPayers { get; set; }
 
         public DbSet<TaxReturn> TaxReturns { get; set; }

@@ -5,7 +5,6 @@ using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +38,8 @@ namespace Api.Controllers
             }
             TaxReturn newTaxReturn = _mapper.Map<TaxReturnDto, TaxReturn>(taxReturnDto);
 
+
+            newTaxReturn.FilingDate = DateTime.Now;
             newTaxReturn.taxHistories = new List<TaxHistory> { new TaxHistory {
                     Status=ActionStatus.UnderReview,
                     Timestamp=DateTime.Now,
@@ -70,7 +71,7 @@ namespace Api.Controllers
             var result = await _taxReturnrepo.GetOneEntityByExpression(tr => tr.FilingDate.Month == month && tr.TaxPayer == foundUser.taxPayer);
 
 
-            return Ok(result == null);
+            return Ok(result != null);
          }
 
 
@@ -92,6 +93,23 @@ namespace Api.Controllers
             var result = TaxReturns.Select(tr => _mapper.Map<TaxReturn, TaxReturnDtoReponse>(tr)).ToList();
 
             return Ok(result);
+        }
+
+
+        [HttpGet("gethistorybytax/{taxReturnID:int}")]
+        [Authorize]
+
+        public async Task<ActionResult<List<TaxHistoryDtoReponse>>> gethistorybytax(int taxReturnID)
+        {
+            var FoundRecord = await _taxReturnrepo.GetOneEntityByExpression(tr => tr.Id == taxReturnID);
+            if (FoundRecord is null)
+            {
+                return BadRequest(new ApiReponse(401 , "No Such Tax Return Exists"));
+            }
+            var TaxHistories = FoundRecord.taxHistories.Select(th => _mapper.Map<TaxHistory, TaxHistoryDtoReponse>(th));
+            
+            
+            return Ok(TaxHistories);
         }
     }
 }

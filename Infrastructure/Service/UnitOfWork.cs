@@ -37,7 +37,7 @@ namespace Infrastructure.Service
 
         public async Task<T?> GetOneEntityByExpression(Expression<Func<T, bool>> condition)
         {
-            return await _context.Set<T>().SingleOrDefaultAsync(condition);
+            return await _context.Set<T>().FirstOrDefaultAsync(condition);
         }
 
         public async Task SaveChangeAsync()

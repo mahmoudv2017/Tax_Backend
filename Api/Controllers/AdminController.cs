@@ -17,22 +17,25 @@ namespace Api.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IUnitOfWork<TaxReturn> _taxReturnRepo;
+        private readonly IUnitOfWork<User> _userRepo;
+
         private readonly IMapper _mapper;
-        public AdminController(IMapper mapper, UserManager<User> userManager , IUnitOfWork<TaxReturn> taxReturnRepo)
+        public AdminController(IUnitOfWork<User> userRepo , IMapper mapper, UserManager<User> userManager , IUnitOfWork<TaxReturn> taxReturnRepo)
         {
             _userManager= userManager;
             _mapper = mapper;
+            _userRepo= userRepo;
             _taxReturnRepo= taxReturnRepo;
         }
         [HttpGet("allinfo/{ssn}")]
         [Authorize(Roles = "Admin")]
 
-        public async Task<ActionResult<UserInfoDto>> GetAllReturns(string ssn)
+        public  async Task<ActionResult<UserInfoDto>> GetAllReturns(string ssn)
         {
             var foundUser = await _userManager.Users.FirstOrDefaultAsync(user => user.SSN == ssn);
+            //_userManager.Users.Include(user => user.Address).FirstOrDefaultAsync(user => user.SSN == ssn);
 
-            if(foundUser is null ) { return BadRequest(new ApiReponse(401 , "No Such User Exists")); }
-
+            if (foundUser is null ) { return BadRequest(new ApiReponse(401 , "No Such User Exists")); }
             return Ok(
 
                 new UserInfoDto
@@ -40,6 +43,7 @@ namespace Api.Controllers
                     UserName = foundUser.UserName,
                     PhoneNumber = foundUser.PhoneNumber,
                     Email = foundUser.Email,
+                    Address = _mapper.Map< Address , AddressDto > (foundUser.Address),
                     UserId = foundUser.Id,
                     taxReturnDtoReponses = foundUser.taxPayer.TaxReturns.Select(tr => _mapper.Map<TaxReturn, TaxReturnDtoReponse>(tr)  ).ToList()
                 });

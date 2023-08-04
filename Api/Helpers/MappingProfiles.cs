@@ -10,6 +10,9 @@ namespace Api.Helpers
         {
             CreateMap<TaxReturn , TaxReturnDtoReponse>().ReverseMap();
             CreateMap<TaxReturn, TaxReturnDto>().ReverseMap();
+            CreateMap<TaxHistory, TaxHistoryDtoReponse>().ReverseMap();
+            CreateMap<Address, AddressDto>().ReverseMap();
+
         }
     }
 }
