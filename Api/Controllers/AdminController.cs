@@ -17,14 +17,12 @@ namespace Api.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IUnitOfWork<TaxReturn> _taxReturnRepo;
-        private readonly IUnitOfWork<User> _userRepo;
 
         private readonly IMapper _mapper;
-        public AdminController(IUnitOfWork<User> userRepo , IMapper mapper, UserManager<User> userManager , IUnitOfWork<TaxReturn> taxReturnRepo)
+        public AdminController( IMapper mapper, UserManager<User> userManager , IUnitOfWork<TaxReturn> taxReturnRepo)
         {
             _userManager= userManager;
             _mapper = mapper;
-            _userRepo= userRepo;
             _taxReturnRepo= taxReturnRepo;
         }
         [HttpGet("allinfo/{ssn}")]
@@ -32,8 +30,7 @@ namespace Api.Controllers
 
         public  async Task<ActionResult<UserInfoDto>> GetAllReturns(string ssn)
         {
-            var foundUser = await _userManager.Users.FirstOrDefaultAsync(user => user.SSN == ssn);
-            //_userManager.Users.Include(user => user.Address).FirstOrDefaultAsync(user => user.SSN == ssn);
+            var foundUser = await _userManager.Users.FirstOrDefaultAsync(user => user.SSN == ssn && user.Role != "Admin");
 
             if (foundUser is null ) { return BadRequest(new ApiReponse(401 , "No Such User Exists")); }
             return Ok(
